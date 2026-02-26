@@ -25,27 +25,30 @@ def create_seq_entry(nucseq_input: NucSeqCreate):
          raise HTTPException(status_code=400, detail=f"Could not create DNA Nucleotide Sequence entry - no sequence label was entered. Please try again.")
 
      new_nucseq = {
-          "id": new_id,
-          "label": nucseq_input.label,
-          "sequence": dna_seq,
-          "analysed": False
+    "id": new_id,
+    "label": nucseq_input.label,
+    "sequence": dna_seq,
+    "nuc_analysed": False,
+    "aa_analysed": False
      }
 
      all_sequences.append(new_nucseq)
      save_sequences(all_sequences)
      return {**new_nucseq, "message": f"A new DNA Nucleotide sequence has been successfully created and added to the DNA Toolkit. You can search for this entry via its unique ID, displayed below, or perform seqence analyses or an amino acid conversion."}
 
-@router.get("/", response_model = list[NucSeqSummary])
-def list_Sequence(analysed: bool | None = None):
-     all_sequences = load_sequences()
-     if len(all_sequences) == 0:
-                  raise HTTPException(status_code=404, detail=f"No nucleotide sequences have been submitted to DNA Toolkit.")
+@router.get("/", response_model=list[NucSeqSummary])
+def list_sequences(nuc_analysed: bool | None = None, aa_analysed: bool | None = None):
+    all_sequences = load_sequences()
+    if len(all_sequences) == 0:
+        raise HTTPException(status_code=404, detail="No nucleotide sequences have been submitted to DNA Toolkit.")
 
-     if analysed == None:
-          return all_sequences
-     
-     sequences_ana = [seq for seq in all_sequences if seq["analysed"] == analysed]
-     return sequences_ana
+    if nuc_analysed is not None:
+        all_sequences = [seq for seq in all_sequences if seq["nuc_analysed"] == nuc_analysed]
+    
+    if aa_analysed is not None:
+        all_sequences = [seq for seq in all_sequences if seq["aa_analysed"] == aa_analysed]
+
+    return all_sequences
 
 @router.get("/{id}", response_model = NucSeq)
 def fetch_sequence_by_ID(id:int):

@@ -12,7 +12,8 @@ class NucSeq(BaseModel):
     id: int
     label: str
     sequence: str
-    analysed: bool = False
+    nuc_analysed: bool = False
+    aa_analysed: bool = False
     gc_content: float | None = None
     seq_length: int | None = None
     amino_acid_sequence: str | None = None
@@ -21,10 +22,11 @@ class NucSeq(BaseModel):
     top_3_residues: list [dict] | None = None
 
 class NucSeqSummary(BaseModel):
-    id:int
+    id: int
     label: str
     sequence: str
-    analysed: bool 
+    nuc_analysed: bool
+    aa_analysed: bool
 
 class NucSeqUpdate(BaseModel):
     label: str 
@@ -48,9 +50,10 @@ class AminoAcidResult(BaseModel):
 class SummaryStats(BaseModel):
     message: str | None = None
     total_sequences: int
-    analysed_sequences: int
+    nuc_analysed_sequences: int
+    aa_analysed_sequences: int
     average_gc_content: float | None = None
     average_nucleotide_length: float | None = None
     average_amino_acid_length: float | None = None
-    longest_sequence: str | None = None
-    shortest_sequence: str | None = None
+    longest_nucleotide_sequence: str | None = None
+    shortest_nucleotide_sequence: str | None = None

@@ -20,7 +20,7 @@ def nucleotide_analysis(id:int):
             gc_content, seq_length = calculate_gc(sequence["sequence"])
             sequence["gc_content"] = gc_content
             sequence["seq_length"] = seq_length
-            sequence["analysed"] = True
+            sequence["nuc_analysed"] = True
             save_sequences(all_sequences)
             
             return {
@@ -75,7 +75,7 @@ def aminoacid_analysis(id:int):
             sequence["residue_count"] = len(amino_acids)
             sequence["composition"] = composition
             sequence["top_3_residues"] = top_3_residues
-            sequence["analysed"] = True
+            sequence["aa_analysed"] = True
             save_sequences(all_sequences)
 
             return {
@@ -95,7 +95,7 @@ def summary_analysis():
     if len(all_sequences) == 0:
         raise HTTPException(status_code=404, detail=f"Summary statistics cannot be calculated: No nucleotide sequences have been submitted to DNA Toolkit.")
 
-    analysed_nuc_seqs = [s for s in all_sequences if s["gc_content"] is not None]
+    analysed_nuc_seqs = [s for s in all_sequences if s.get("gc_content") is not None]
     if len(analysed_nuc_seqs) == 0:
         raise HTTPException(status_code=404, detail=f"Summary statistics cannot be calculated: No nucleotide sequences currently stored in the DNA Toolkit have undergone analysis.")
 
@@ -104,7 +104,7 @@ def summary_analysis():
     longest_nucseq = max(analysed_nuc_seqs, key=lambda x: x["seq_length"])
     shortest_nucseq = min(analysed_nuc_seqs, key=lambda x: x["seq_length"])
 
-    analysed_aa_seqs = [s for s in all_sequences if s["residue_count"] is not None]
+    analysed_aa_seqs = [s for s in all_sequences if s.get("residue_count") is not None]
     if len(analysed_aa_seqs) == 0:
         av_aa_length = None
     else:
@@ -113,10 +113,11 @@ def summary_analysis():
     return {
     "message": "Summary of key statistics of all sequences currently stored in DNA Toolkit. If a statistic is missing, it is likely due to GC content analysis or Amino Acid conversion not having been performed yet.",
     "total_sequences": len(all_sequences),
-    "analysed_sequences": len(analysed_nuc_seqs),
+    "nuc_analysed_sequences": len(analysed_nuc_seqs),
+    "aa_analysed_sequences": len(analysed_aa_seqs),
     "average_gc_content": av_gc,
     "average_nucleotide_length": av_nuc_length,
     "average_amino_acid_length": av_aa_length,
-    "longest_sequence": longest_nucseq["label"],
-    "shortest_sequence": shortest_nucseq["label"]
-}
+    "longest_nucleotide_sequence": longest_nucseq["label"],
+    "shortest_nucleotide_sequence": shortest_nucseq["label"]
+    }
