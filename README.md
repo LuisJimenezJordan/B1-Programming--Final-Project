@@ -38,7 +38,7 @@ A sequence of amino acids folds into a protein, which performs virtually every f
 
 ### Why Build a Toolkit Like This?
 
-In real bioinformatics workflows, researchers routinely need to store, retrieve, and analyse large numbers of sequences. This toolkit demonstrates the fundamental concepts behind such systems — sequence storage, GC content calculation, codon translation, and compositional analysis — implemented as a clean RESTful API.
+In real bioinformatics workflows, researchers routinely need to store, retrieve, and analyse large numbers of sequences. This toolkit demonstrates the fundamental concepts behind such systems — sequence storage, GC content calculation, codon translation, and compositional analysis.
 
 ---
 
